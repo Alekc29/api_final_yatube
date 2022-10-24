@@ -18,7 +18,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post_id = self.kwargs.get('post_id')
-        return Comment.objects.filter(post_id=post_id)
+        return Comment.objects.select_related('author').filter(post_id=post_id)
 
     def perform_create(self, serializer):
         post_id = self.kwargs.get('post_id')
@@ -33,7 +33,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.prefetch_related('author')
     serializer_class = PostSerializer
     permission_classes = (
         IsAuthenticatedOrReadOnly,

@@ -33,7 +33,9 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.prefetch_related('author', 'comments')
+    queryset = (
+        Post.objects.prefetch_related('comments').select_related('author')
+    )
     serializer_class = PostSerializer
     permission_classes = (
         IsAuthenticatedOrReadOnly,
